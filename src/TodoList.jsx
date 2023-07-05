@@ -1,12 +1,7 @@
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import CommentIcon from '@mui/icons-material/Comment';
-import { useState } from 'react';
+import List from "@mui/material/List";
+import TodoItem from "./TodoItem";
+
+import { useState } from "react";
 
 const initialTodos = [
   {
@@ -31,45 +26,34 @@ const initialTodos = [
   },
 ];
 
-export default function TodoList(){
-    const [todos, setTodos] = useState(initialTodos)
-    return  ( 
-        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-            {todos.map(todo => {
-                        const labelId = `checkbox-list-label-${todo.id}`;
+export default function TodoList() {
+  const [todos, setTodos] = useState(initialTodos);
 
-                        return (
-                          <ListItem
-                            key={todo.id}
-                            secondaryAction={
-                              <IconButton edge="end" aria-label="comments">
-                                <CommentIcon />
-                              </IconButton>
-                            }
-                            disablePadding
-                          >
-                            <ListItemButton role={undefined} dense>
-                              <ListItemIcon>
-                                <Checkbox
-                                  edge="start"
-                                  checked={todo.completed}
-                                  tabIndex={-1}
-                                  disableRipple
-                                  inputProps={{ 'aria-labelledby': labelId }}
-                                />
-                              </ListItemIcon>
-                              <ListItemText id={labelId} primary={todo.text} />
-                            </ListItemButton>
-                          </ListItem>
-                        );
-            })}
-            
-            </List>
-    )
+  const removeTodo = (id) => {
+    setTodos((prevTodos) => {
+      return prevTodos.filter((t) => t.id !== id);
+    });
+  };
+
+  const toggleTodo = (id) => {
+    setTodos((prevTodos) => {
+      return prevTodos.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, completed: !todo.completed };
+        } else {
+          return todo;
+        }
+      });
+    });
+  };
+  return (
+    <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+      {todos.map((todo) => (
+        <TodoItem key={todo.id} todo={todo} remove={removeTodo} toggle={() => toggleTodo(todo.id)} />
+      ))}
+    </List>
+  );
 }
-
-
-
 
 // export function CheckboxList() {
 //   const [checked, setChecked] = React.useState([0]);
